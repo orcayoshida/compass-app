@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compass – 企業を選ぶ前に、自分を徹底的に知る</title>
+  <title>Compass – 企業を選ぶ前に、自分を知る</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -313,30 +313,76 @@
       letter-spacing: 0.03em;
     }
 
-    textarea {
+    select {
       width: 100%;
-      min-height: 120px;
-      padding: 16px 18px;
-      border: 1px solid rgba(27, 42, 74, 0.15);
+      padding: 14px 18px;
+      border: 1px solid rgba(27, 42, 74, 0.18);
       border-radius: 2px;
       font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       color: var(--navy);
       background: var(--offwhite);
-      resize: vertical;
       outline: none;
-      line-height: 1.8;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A96E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      cursor: pointer;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    textarea:focus {
+    select:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1);
+      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12);
     }
 
-    textarea::placeholder {
-      color: var(--gray-muted);
+    /* ─── CHOICE BUTTONS ─── */
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 500px) {
+      .choices-grid { grid-template-columns: 1fr; }
+    }
+
+    .choice-btn {
+      padding: 16px 18px;
+      border: 1px solid rgba(27, 42, 74, 0.18);
+      border-radius: 2px;
+      background: var(--offwhite);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.88rem;
+      color: var(--navy);
+      line-height: 1.6;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .choice-btn:hover {
+      border-color: var(--gold);
+      background: rgba(201, 169, 110, 0.06);
+    }
+
+    .choice-btn.selected {
+      border-color: var(--gold);
+      background: rgba(201, 169, 110, 0.1);
+      box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.25);
+    }
+
+    .choice-btn.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      color: var(--gold);
       font-size: 0.85rem;
+      font-weight: 600;
     }
 
     .q-nav {
@@ -594,7 +640,7 @@
   <div id="section-input">
     <div class="card">
       <p class="section-label">自分を問う、最初の一歩</p>
-      <p class="section-sub">気になっている企業名と業界を入力してください。AIがあなた自身を深く見つめるための10の問いを生成します。</p>
+      <p class="section-sub">気になっている企業名と業界を入力してください。AIがあなた自身を深く見つめるための5つの問いを生成します。</p>
 
       <div class="form-group">
         <label for="company">企業名</label>
@@ -602,7 +648,21 @@
       </div>
       <div class="form-group">
         <label for="industry">業界</label>
-        <input type="text" id="industry" placeholder="例：IT・インターネット、コンサルティング、金融 など" />
+        <select id="industry">
+          <option value="">選択してください</option>
+          <option value="メーカー（自動車・機械・電機・食品・化学など）">メーカー（自動車・機械・電機・食品・化学など）</option>
+          <option value="商社（総合商社・専門商社）">商社（総合商社・専門商社）</option>
+          <option value="金融（銀行・証券・保険・ファンド）">金融（銀行・証券・保険・ファンド）</option>
+          <option value="コンサルティング（戦略・IT・総合）">コンサルティング（戦略・IT・総合）</option>
+          <option value="IT・テック（ソフトウェア・SaaS・AI）">IT・テック（ソフトウェア・SaaS・AI）</option>
+          <option value="広告・メディア（広告代理店・出版・放送）">広告・メディア（広告代理店・出版・放送）</option>
+          <option value="不動産・建設">不動産・建設</option>
+          <option value="医療・製薬・ヘルスケア">医療・製薬・ヘルスケア</option>
+          <option value="物流・インフラ・エネルギー">物流・インフラ・エネルギー</option>
+          <option value="官公庁・公務員・非営利">官公庁・公務員・非営利</option>
+          <option value="スタートアップ・ベンチャー">スタートアップ・ベンチャー</option>
+          <option value="その他">その他</option>
+        </select>
       </div>
 
       <div class="loading-overlay" id="loading-questions">
@@ -622,7 +682,7 @@
       <div class="questions-header">
         <div>
           <p class="section-label" id="qs-company-label"></p>
-          <p class="questions-meta" id="qs-progress-label">問 1 / 10</p>
+          <p class="questions-meta" id="qs-progress-label">問 1 / 5</p>
         </div>
       </div>
       <div class="progress-bar-wrap">
@@ -632,7 +692,7 @@
       <div class="question-item" id="current-question">
         <p class="q-number" id="q-number">Question 01</p>
         <p class="q-text" id="q-text"></p>
-        <textarea id="q-answer" placeholder="正直に、自分の言葉で答えてください…" rows="5"></textarea>
+        <div class="choices-grid" id="choices-grid"></div>
         <div class="q-nav">
           <button class="btn-secondary" id="btn-back">← 前へ</button>
           <button class="btn-next" id="btn-next">次へ →</button>
@@ -677,8 +737,8 @@
   const state = {
     company: '',
     industry: '',
-    questions: [],
-    answers: [],
+    questions: [],   // [{text, choices:[]}]
+    answers: [],     // selected choice text
     currentIndex: 0,
   };
 
@@ -700,7 +760,7 @@
   const companyLabel = document.getElementById('qs-company-label');
   const qNumber = document.getElementById('q-number');
   const qText = document.getElementById('q-text');
-  const qAnswer = document.getElementById('q-answer');
+  const choicesGrid = document.getElementById('choices-grid');
   const currentQuestion = document.getElementById('current-question');
   const axisList = document.getElementById('axis-list');
   const summaryTitle = document.getElementById('summary-title');
@@ -715,14 +775,42 @@
     el.classList.remove('active');
   }
 
+  function renderChoices(index) {
+    const q = state.questions[index];
+    choicesGrid.innerHTML = '';
+    q.choices.forEach((choice, ci) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      if (state.answers[index] === choice) btn.classList.add('selected');
+      btn.textContent = choice;
+      btn.addEventListener('click', () => {
+        state.answers[index] = choice;
+        document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        // Auto-advance after short delay
+        setTimeout(() => {
+          if (index < state.questions.length - 1) {
+            state.currentIndex++;
+            updateQuestion(state.currentIndex);
+          } else {
+            // last question — highlight finish button
+            btnFinish.style.animation = 'pulse 0.4s ease';
+          }
+        }, 400);
+      });
+      choicesGrid.appendChild(btn);
+    });
+  }
+
   function updateQuestion(index) {
     currentQuestion.classList.remove('visible');
     setTimeout(() => {
       qNumber.textContent = `Question ${String(index + 1).padStart(2, '0')}`;
-      qText.textContent = state.questions[index];
-      qAnswer.value = state.answers[index] || '';
+      qText.textContent = state.questions[index].text;
       progressBar.style.width = `${((index + 1) / state.questions.length) * 100}%`;
       progressLabel.textContent = `問 ${index + 1} / ${state.questions.length}`;
+
+      renderChoices(index);
 
       btnBack.style.visibility = index === 0 ? 'hidden' : 'visible';
       btnNext.classList.toggle('hidden', index === state.questions.length - 1);
@@ -735,10 +823,11 @@
   // Generate questions
   btnGenerate.addEventListener('click', async () => {
     const company = document.getElementById('company').value.trim();
-    const industry = document.getElementById('industry').value.trim();
+    const industryEl = document.getElementById('industry');
+    const industry = industryEl.value;
 
     if (!company || !industry) {
-      showError(errorInput, '企業名と業界の両方を入力してください。');
+      showError(errorInput, '企業名と業界の両方を入力・選択してください。');
       return;
     }
 
@@ -759,10 +848,19 @@
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
 
-      if (!data.questions || data.questions.length < 5) throw new Error('Invalid questions');
+      // Support both old format (string[]) and new format ({text, choices}[])
+      let questions = data.questions;
+      if (!questions || questions.length < 3) throw new Error('Invalid questions');
 
-      state.questions = data.questions;
-      state.answers = new Array(data.questions.length).fill('');
+      // Normalize to {text, choices} format
+      state.questions = questions.map(q => {
+        if (typeof q === 'string') {
+          return { text: q, choices: ['とても当てはまる', '少し当てはまる', 'あまり当てはまらない', '全く当てはまらない'] };
+        }
+        return q;
+      });
+
+      state.answers = new Array(state.questions.length).fill('');
       state.currentIndex = 0;
 
       secInput.style.display = 'none';
@@ -780,7 +878,6 @@
   });
 
   btnBack.addEventListener('click', () => {
-    state.answers[state.currentIndex] = qAnswer.value;
     if (state.currentIndex > 0) {
       state.currentIndex--;
       updateQuestion(state.currentIndex);
@@ -788,7 +885,11 @@
   });
 
   btnNext.addEventListener('click', () => {
-    state.answers[state.currentIndex] = qAnswer.value;
+    if (!state.answers[state.currentIndex]) {
+      showError(errorQuestions, '選択肢を選んでから次へ進んでください。');
+      return;
+    }
+    hideError(errorQuestions);
     if (state.currentIndex < state.questions.length - 1) {
       state.currentIndex++;
       updateQuestion(state.currentIndex);
@@ -796,16 +897,19 @@
   });
 
   btnFinish.addEventListener('click', async () => {
-    state.answers[state.currentIndex] = qAnswer.value;
+    if (!state.answers[state.currentIndex]) {
+      showError(errorQuestions, '選択肢を選んでから結果を見てください。');
+      return;
+    }
+    hideError(errorQuestions);
 
-    // Build answers text
+    // Build answers text from choices
     const answersText = state.questions.map((q, i) =>
-      `Q${i + 1}: ${q}\nA: ${state.answers[i] || '（未回答）'}`
+      `Q${i + 1}: ${q.text}\nA: ${state.answers[i] || '（未回答）'}`
     ).join('\n\n');
 
     currentQuestion.style.display = 'none';
     loadingS.classList.add('active');
-    hideError(errorQuestions);
 
     try {
       const res = await fetch('/api/chat', {
