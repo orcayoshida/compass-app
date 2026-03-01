@@ -3,36 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compass – 企業を選ぶ前に、自分を知る</title>
+  <title>URA-KAKU（裏確）| その会社、マジで自分に合ってる？</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
       --navy: #1B2A4A;
-      --navy-light: #253660;
-      --navy-dark: #111c31;
+      --navy-dark: #111B30;
+      --navy-light: #243558;
+      --gold: #C9A84C;
+      --gold-light: #E2C97A;
       --gray: #4A5568;
       --gray-light: #718096;
-      --gray-muted: #A0AEC0;
       --offwhite: #F7F8FA;
-      --white: #ffffff;
-      --gold: #C9A96E;
-      --gold-light: #E8C98A;
-      --border: rgba(201, 169, 110, 0.25);
-      --shadow: 0 20px 60px rgba(27, 42, 74, 0.15);
+      --white: #FFFFFF;
+      --danger: #E05252;
+      --success: #48BB78;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Noto Sans JP', sans-serif;
-      background: var(--offwhite);
-      color: var(--navy);
+      background: var(--navy-dark);
+      color: var(--offwhite);
       min-height: 100vh;
-      position: relative;
       overflow-x: hidden;
     }
 
@@ -42,1045 +41,1004 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(27, 42, 74, 0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(201, 169, 110, 0.05) 0%, transparent 60%);
+        radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(27,42,74,0.8) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* ─── HEADER ─── */
-    header {
-      position: relative;
-      z-index: 10;
-      background: var(--navy);
-      padding: 0;
-      overflow: hidden;
-    }
-
-    header::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    }
-
-    .header-inner {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 48px 24px 40px;
-      text-align: center;
-      position: relative;
-    }
-
-    .compass-icon {
-      width: 52px;
-      height: 52px;
-      margin: 0 auto 20px;
-      position: relative;
-    }
-
-    .compass-icon svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .logo {
-      font-family: 'Noto Serif JP', serif;
-      font-size: clamp(2rem, 5vw, 2.8rem);
-      font-weight: 300;
-      color: var(--white);
-      letter-spacing: 0.3em;
-      margin-bottom: 10px;
-    }
-
-    .logo span {
-      color: var(--gold);
-    }
-
-    .tagline {
-      font-size: 0.82rem;
-      color: var(--gray-muted);
-      letter-spacing: 0.25em;
-      font-weight: 300;
-      margin-bottom: 28px;
-    }
-
-    .header-desc {
-      border-top: 1px solid rgba(201, 169, 110, 0.2);
-      padding-top: 24px;
-      max-width: 560px;
-      margin: 0 auto;
-    }
-
-    .header-desc-main {
-      font-size: 0.88rem;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.9;
-      letter-spacing: 0.04em;
-      margin-bottom: 20px;
-      font-weight: 300;
-    }
-
-    .header-features {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-align: left;
-    }
-
-    .header-feature {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 0.05em;
-      line-height: 1.6;
-    }
-
-    .feature-icon {
-      color: var(--gold);
-      font-size: 0.7rem;
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    /* ─── MAIN ─── */
-    main {
+    .screen {
+      display: none;
+      min-height: 100vh;
       position: relative;
       z-index: 1;
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 60px 24px 100px;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .screen.active { display: flex; flex-direction: column; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ─── CARDS ─── */
-    .card {
-      background: var(--white);
-      border: 1px solid rgba(27, 42, 74, 0.08);
-      border-radius: 2px;
-      box-shadow: var(--shadow);
-      padding: 48px;
-      margin-bottom: 32px;
+    /* ========== STEP 1: TOP ========== */
+    #step1 {
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
     }
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 600px) {
-      .card { padding: 28px 18px; }
-
-      .header-inner { padding: 36px 20px 32px; }
-
-      .header-features { gap: 8px; }
-
-      main { padding: 36px 16px 80px; }
-
-      .q-nav {
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .btn-secondary,
-      .btn-next,
-      .btn-finish {
-        padding: 12px 20px;
-        font-size: 0.82rem;
-        flex: 1;
-        text-align: center;
-      }
-
-      .btn-primary { padding: 16px 24px; font-size: 0.95rem; }
-
-      .axis-item { flex-direction: column; gap: 10px; padding: 18px; }
-
-      .axis-num { font-size: 1.2rem; }
-
-      .summary-message { padding: 24px 20px; }
-
-      .choices-grid { grid-template-columns: 1fr; }
-
-      .questions-header { flex-direction: column; gap: 8px; }
-
-      .section-label { font-size: 1.15rem; }
-    }
-
-    @media (max-width: 380px) {
-      .logo { font-size: 1.8rem; }
-      .card { padding: 22px 14px; }
-      .header-desc-main { font-size: 0.82rem; }
-    }
-
-    /* ─── INPUT SECTION ─── */
-    #section-input {}
-
-    .section-label {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 1.35rem;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 8px;
-      letter-spacing: 0.05em;
-    }
-
-    .section-sub {
-      font-size: 0.82rem;
-      color: var(--gray-light);
-      margin-bottom: 36px;
-      line-height: 1.7;
-      letter-spacing: 0.04em;
-    }
-
-    .form-group {
-      margin-bottom: 24px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--gray);
-      letter-spacing: 0.12em;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-
-    input[type="text"] {
+    .top-container {
       width: 100%;
-      padding: 14px 18px;
-      border: 1px solid rgba(27, 42, 74, 0.18);
-      border-radius: 2px;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.95rem;
-      color: var(--navy);
-      background: var(--offwhite);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      max-width: 520px;
     }
 
-    input[type="text"]:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12);
-    }
-
-    input[type="text"]::placeholder {
-      color: var(--gray-muted);
-      font-size: 0.88rem;
-    }
-
-    /* ─── BUTTON ─── */
-    .btn-primary {
-      display: block;
-      width: 100%;
-      padding: 18px 32px;
-      background: var(--navy);
-      color: var(--white);
-      border: none;
-      border-radius: 2px;
-      font-family: 'Noto Serif JP', serif;
-      font-size: 1rem;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s, transform 0.15s;
-      margin-top: 32px;
-    }
-
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--gold);
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-
-    .btn-primary:hover::before { transform: scaleX(1); }
-    .btn-primary:hover { background: var(--navy-light); }
-    .btn-primary:active { transform: scale(0.99); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* ─── LOADING ─── */
-    .loading-overlay {
-      display: none;
-      text-align: center;
-      padding: 40px 0;
-    }
-
-    .loading-overlay.active { display: block; }
-
-    .loader {
-      width: 36px;
-      height: 36px;
-      border: 2px solid rgba(27, 42, 74, 0.12);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .loading-text {
-      font-size: 0.82rem;
-      color: var(--gray-light);
-      letter-spacing: 0.15em;
-    }
-
-    /* ─── QUESTIONS SECTION ─── */
-    #section-questions { display: none; }
-
-    .questions-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 36px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .questions-meta {
-      font-size: 0.78rem;
-      color: var(--gray-muted);
-      letter-spacing: 0.1em;
-    }
-
-    .progress-bar-wrap {
-      background: rgba(27, 42, 74, 0.08);
-      height: 2px;
-      border-radius: 1px;
-      margin-bottom: 40px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--navy), var(--gold));
-      border-radius: 1px;
-      transition: width 0.5s ease;
-      width: 0%;
-    }
-
-    /* ─── QUESTION CARD ─── */
-    .question-item {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      margin-bottom: 0;
-    }
-
-    .question-item.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .q-number {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      font-weight: 500;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
-
-    .q-text {
-      font-family: 'Noto Serif JP', serif;
-      font-size: clamp(1rem, 2.5vw, 1.18rem);
-      font-weight: 400;
-      color: var(--navy);
-      line-height: 1.85;
-      margin-bottom: 20px;
-      letter-spacing: 0.03em;
-    }
-
-    select {
-      width: 100%;
-      padding: 14px 18px;
-      border: 1px solid rgba(27, 42, 74, 0.18);
-      border-radius: 2px;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.95rem;
-      color: var(--navy);
-      background: var(--offwhite);
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A96E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    select:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12);
-    }
-
-    /* ─── CHOICE BUTTONS ─── */
-    .choices-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
-    
-
-    .choice-btn {
-      padding: 16px 18px;
-      border: 1px solid rgba(27, 42, 74, 0.18);
-      border-radius: 2px;
-      background: var(--offwhite);
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.88rem;
-      color: var(--navy);
-      line-height: 1.6;
-      cursor: pointer;
-      text-align: left;
-      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-
-    .choice-btn:hover {
-      border-color: var(--gold);
-      background: rgba(201, 169, 110, 0.06);
-    }
-
-    .choice-btn.selected {
-      border-color: var(--gold);
-      background: rgba(201, 169, 110, 0.1);
-      box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.25);
-    }
-
-    .choice-btn.selected::after {
-      content: '✓';
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      color: var(--gold);
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .q-nav {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-      justify-content: flex-end;
-    }
-
-    .btn-secondary {
-      padding: 12px 28px;
-      background: transparent;
-      color: var(--gray);
-      border: 1px solid rgba(27, 42, 74, 0.2);
-      border-radius: 2px;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--navy);
-      color: var(--navy);
-    }
-
-    .btn-next {
-      padding: 12px 32px;
-      background: var(--navy);
-      color: var(--white);
-      border: none;
-      border-radius: 2px;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.88rem;
-      letter-spacing: 0.12em;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-next:hover { background: var(--navy-light); }
-
-    .btn-finish {
-      padding: 12px 32px;
-      background: var(--gold);
-      color: var(--navy);
-      border: none;
-      border-radius: 2px;
-      font-family: 'Noto Serif JP', serif;
-      font-size: 0.92rem;
-      letter-spacing: 0.12em;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .btn-finish:hover { background: var(--gold-light); }
-
-    /* ─── SUMMARY SECTION ─── */
-    #section-summary { display: none; }
-
-    .summary-header {
+    .logo-area {
       text-align: center;
       margin-bottom: 48px;
     }
 
-    .summary-eyebrow {
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
+    .logo-badge {
+      display: inline-block;
+      border: 1px solid rgba(201,168,76,0.4);
+      padding: 4px 16px;
+      border-radius: 2px;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .logo-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(48px, 12vw, 80px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo-title span {
+      color: var(--gold);
+    }
+
+    .logo-ruby {
+      display: block;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      color: var(--gray-light);
+      letter-spacing: 0.15em;
+      margin-top: 8px;
+    }
+
+    .catch {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--gray-light);
+      line-height: 1.8;
+    }
+    .catch strong {
+      display: block;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px;
+      color: var(--offwhite);
+      margin-bottom: 4px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 32px auto;
+      opacity: 0.5;
+    }
+
+    .form-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 32px;
+      backdrop-filter: blur(10px);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 14px 16px;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 15px;
+      color: var(--white);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      appearance: none;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.05);
+    }
+
+    input::placeholder { color: rgba(255,255,255,0.3); }
+
+    select option {
+      background: var(--navy-dark);
+      color: var(--offwhite);
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper::after {
+      content: '▾';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold);
+      pointer-events: none;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: var(--gold);
+      color: var(--navy-dark);
+      border: none;
+      border-radius: 4px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .loading-text {
+      text-align: center;
+      font-size: 13px;
+      color: var(--gray-light);
+      margin-top: 12px;
+      min-height: 20px;
+    }
+
+    /* ========== STEP 2: QUIZ ========== */
+    #step2 {
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .quiz-container {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .quiz-brand {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+    }
+
+    .quiz-step-info {
+      font-size: 12px;
+      color: var(--gray-light);
+      letter-spacing: 0.1em;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 1px;
+      transition: width 0.4s ease;
+    }
+
+    .question-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .question-text {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(16px, 4vw, 20px);
+      line-height: 1.7;
+      color: var(--white);
+      margin-bottom: 32px;
+      min-height: 80px;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .choice-btn {
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      color: var(--offwhite);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .choice-btn:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.06);
+    }
+
+    .choice-btn.selected {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.12);
+      color: var(--white);
+    }
+
+    .choice-mark {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .choice-btn.selected .choice-mark {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .quiz-nav {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--offwhite);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-nav:hover { border-color: var(--gold); color: var(--gold); }
+
+    .btn-nav-primary {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy-dark);
+      font-weight: 700;
+    }
+
+    .btn-nav-primary:hover { background: var(--gold-light); color: var(--navy-dark); }
+    .btn-nav-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .context-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+
+    /* ========== STEP 3: RESULTS ========== */
+    #step3 {
+      padding: 40px 20px 60px;
+      align-items: center;
+    }
+
+    .results-container {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .results-brand {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .results-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.4;
+    }
+
+    .company-target {
+      display: inline-block;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 3px;
+      padding: 2px 10px;
+      font-size: 14px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    /* Match score */
+    .match-score-card {
+      background: linear-gradient(135deg, rgba(27,42,74,0.8), rgba(17,27,48,0.9));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .match-score-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .match-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
       color: var(--gold);
       text-transform: uppercase;
       margin-bottom: 12px;
     }
 
-    .summary-title {
+    .match-number {
       font-family: 'Noto Serif JP', serif;
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 300;
-      color: var(--navy);
-      letter-spacing: 0.08em;
-      margin-bottom: 16px;
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
     }
 
-    .summary-divider {
-      width: 60px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 0 auto;
+    .match-number span {
+      font-size: 32px;
+      color: var(--gold);
     }
 
+    .match-verdict {
+      margin-top: 12px;
+      font-size: 15px;
+      color: var(--gray-light);
+      line-height: 1.6;
+    }
+
+    /* Radar */
+    .chart-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      max-width: 320px;
+      margin: 0 auto 24px;
+    }
+
+    /* Axis bars */
     .axis-list {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      margin-bottom: 40px;
+      gap: 12px;
     }
 
-    .axis-item {
+    .axis-item {}
+
+    .axis-row {
       display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      padding: 24px;
-      border-left: 2px solid var(--gold);
-      background: rgba(201, 169, 110, 0.04);
-      opacity: 0;
-      transform: translateX(-12px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
     }
 
-    .axis-item.visible {
-      opacity: 1;
-      transform: translateX(0);
+    .axis-name {
+      font-size: 12px;
+      color: var(--offwhite);
     }
 
-    .axis-num {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 1.6rem;
-      font-weight: 300;
+    .axis-val {
+      font-size: 12px;
+      font-weight: 700;
       color: var(--gold);
-      line-height: 1;
-      min-width: 32px;
     }
 
-    .axis-content {}
+    .axis-bar-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+    }
 
-    .axis-label {
+    .axis-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transition: width 1s ease;
+    }
+
+    /* OB Comment */
+    .ob-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .ob-quote-mark {
       font-family: 'Noto Serif JP', serif;
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 8px;
+      font-size: 48px;
+      line-height: 1;
+      color: rgba(201,168,76,0.2);
+      position: absolute;
+      top: 12px;
+      left: 16px;
     }
 
-    .axis-desc {
-      font-size: 0.88rem;
-      color: var(--gray);
+    .ob-text {
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--offwhite);
+      padding-left: 8px;
+    }
+
+    .ob-attribution {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--gray-light);
+      letter-spacing: 0.1em;
+    }
+
+    /* Axes cards */
+    .axes-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .axis-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
+      padding: 18px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .axis-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .axis-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .axis-card-desc {
+      font-size: 12px;
+      color: var(--gray-light);
+      line-height: 1.7;
+    }
+
+    /* Retry button */
+    .btn-retry {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      color: var(--gray-light);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .btn-retry:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Loading overlay */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17,27,48,0.95);
+      z-index: 100;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    #loading-overlay.active { display: flex; }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 2px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-msg {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 15px;
+      color: var(--offwhite);
+      text-align: center;
       line-height: 1.8;
     }
 
-    .summary-message {
-      background: var(--navy);
-      color: var(--offwhite);
-      padding: 32px 36px;
-      border-radius: 2px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 36px;
-    }
-
-    .summary-message::before {
-      content: '"';
-      position: absolute;
-      top: -10px;
-      left: 20px;
-      font-family: 'Noto Serif JP', serif;
-      font-size: 8rem;
-      color: rgba(201, 169, 110, 0.12);
-      line-height: 1;
-      pointer-events: none;
-    }
-
-    .summary-message p {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 0.95rem;
-      line-height: 2;
-      position: relative;
-      z-index: 1;
-      font-weight: 300;
-    }
-
-    .btn-restart {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: transparent;
-      border: 1px solid rgba(27, 42, 74, 0.2);
-      border-radius: 2px;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.82rem;
-      color: var(--gray);
-      letter-spacing: 0.15em;
-      cursor: pointer;
-      transition: all 0.2s;
+    .loading-sub {
+      font-size: 12px;
+      color: var(--gray-light);
       text-align: center;
     }
 
-    .btn-restart:hover {
-      border-color: var(--navy);
-      color: var(--navy);
-    }
-
-    /* ─── ERROR ─── */
+    /* Error message */
     .error-msg {
+      background: rgba(224,82,82,0.1);
+      border: 1px solid rgba(224,82,82,0.3);
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #FC8181;
+      margin-top: 12px;
       display: none;
-      background: #FFF5F5;
-      border: 1px solid #FEB2B2;
-      border-radius: 2px;
-      padding: 14px 18px;
-      font-size: 0.85rem;
-      color: #C53030;
-      margin-top: 16px;
-      letter-spacing: 0.03em;
     }
 
-    .error-msg.active { display: block; }
-
-    /* ─── FOOTER ─── */
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 32px 24px;
-      font-size: 0.72rem;
-      color: var(--gray-muted);
-      letter-spacing: 0.1em;
-      border-top: 1px solid rgba(27, 42, 74, 0.08);
+    @media (max-width: 480px) {
+      .form-card { padding: 24px 20px; }
+      .match-score-card { padding: 24px; }
     }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card { animation: fadeInUp 0.6s ease both; }
-
-    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="compass-icon">
-      <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="26" cy="26" r="24" stroke="#C9A96E" stroke-width="1"/>
-        <circle cx="26" cy="26" r="18" stroke="rgba(201,169,110,0.3)" stroke-width="0.5"/>
-        <line x1="26" y1="4" x2="26" y2="10" stroke="#C9A96E" stroke-width="1.5"/>
-        <line x1="26" y1="42" x2="26" y2="48" stroke="#C9A96E" stroke-width="1.5"/>
-        <line x1="4" y1="26" x2="10" y2="26" stroke="#C9A96E" stroke-width="1.5"/>
-        <line x1="42" y1="26" x2="48" y2="26" stroke="#C9A96E" stroke-width="1.5"/>
-        <polygon points="26,10 29,26 26,22 23,26" fill="#C9A96E"/>
-        <polygon points="26,42 23,26 26,30 29,26" fill="rgba(201,169,110,0.4)"/>
-        <circle cx="26" cy="26" r="2.5" fill="#C9A96E"/>
-      </svg>
-    </div>
-    <h1 class="logo">Com<span>pass</span></h1>
-    <p class="tagline">企業を選ぶ前に、徹底的に自分を知る</p>
-    <div class="header-desc">
-      <p class="header-desc-main">あなたが気になる企業を入力するだけで、AIがあなた自身の価値観・本音・働き方の軸を掘り起こす5つの問いを生成します。</p>
-      <div class="header-features">
-        <div class="header-feature">
-          <span class="feature-icon">◈</span>
-          <span>企業・業界に合わせてカスタマイズされた質問</span>
-        </div>
-        <div class="header-feature">
-          <span class="feature-icon">◈</span>
-          <span>答えるだけで「就活の軸」が言語化される</span>
-        </div>
-        <div class="header-feature">
-          <span class="feature-icon">◈</span>
-          <span>面接で使える自己分析レポートを自動生成</span>
-        </div>
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loading-msg">OBのリアルな声をもとに<br>質問を生成しています...</div>
+  <div class="loading-sub">少々お待ちください</div>
+</div>
+
+<!-- STEP 1: TOP -->
+<div id="step1" class="screen active">
+  <div class="top-container">
+    <div class="logo-area">
+      <div class="logo-badge">Career Diagnosis</div>
+      <h1 class="logo-title">URA-<span>KAKU</span></h1>
+      <span class="logo-ruby">裏　確</span>
+      <div class="divider"></div>
+      <div class="catch">
+        <strong>その会社、マジで自分に合ってる？</strong>
+        5年後の不安を、裏まで確認して自信に変える。
       </div>
     </div>
-  </div>
-</header>
 
-<main>
-
-  <!-- ① INPUT -->
-  <div id="section-input">
-    <div class="card">
-      <p class="section-label">自分を問う、最初の一歩</p>
-      <p class="section-sub">気になっている企業名と業界を入力してください。AIがあなた自身を深く見つめるための5つの問いを生成します。</p>
-
+    <div class="form-card">
       <div class="form-group">
-        <label for="company">企業名</label>
-        <input type="text" id="company" placeholder="例：株式会社サイバーエージェント" />
+        <label for="company-input">企業名</label>
+        <input type="text" id="company-input" placeholder="例：トヨタ自動車、楽天グループ" />
       </div>
       <div class="form-group">
-        <label for="industry">業界</label>
-        <select id="industry">
-          <option value="">選択してください</option>
-          <option value="メーカー（自動車・機械・電機・食品・化学など）">メーカー（自動車・機械・電機・食品・化学など）</option>
-          <option value="商社（総合商社・専門商社）">商社（総合商社・専門商社）</option>
-          <option value="金融（銀行・証券・保険・ファンド）">金融（銀行・証券・保険・ファンド）</option>
-          <option value="コンサルティング（戦略・IT・総合）">コンサルティング（戦略・IT・総合）</option>
-          <option value="IT・テック（ソフトウェア・SaaS・AI）">IT・テック（ソフトウェア・SaaS・AI）</option>
-          <option value="広告・メディア（広告代理店・出版・放送）">広告・メディア（広告代理店・出版・放送）</option>
-          <option value="不動産・建設">不動産・建設</option>
-          <option value="医療・製薬・ヘルスケア">医療・製薬・ヘルスケア</option>
-          <option value="物流・インフラ・エネルギー">物流・インフラ・エネルギー</option>
-          <option value="官公庁・公務員・非営利">官公庁・公務員・非営利</option>
-          <option value="スタートアップ・ベンチャー">スタートアップ・ベンチャー</option>
-          <option value="その他">その他</option>
-        </select>
-      </div>
-
-      <div class="loading-overlay" id="loading-questions">
-        <div class="loader"></div>
-        <p class="loading-text">問いを生成しています...</p>
-      </div>
-
-      <div class="error-msg" id="error-input">エラーが発生しました。入力を確認して再度お試しください。</div>
-
-      <button class="btn-primary" id="btn-generate">自分に問う</button>
-    </div>
-  </div>
-
-  <!-- ② QUESTIONS -->
-  <div id="section-questions">
-    <div class="card">
-      <div class="questions-header">
-        <div>
-          <p class="section-label" id="qs-company-label"></p>
-          <p class="questions-meta" id="qs-progress-label">問 1 / 5</p>
+        <label for="industry-select">業界</label>
+        <div class="select-wrapper">
+          <select id="industry-select">
+            <option value="">業界を選択してください</option>
+            <option value="メーカー（自動車・機械・電機・食品・化学）">メーカー（自動車・機械・電機・食品・化学）</option>
+            <option value="商社（総合商社・専門商社）">商社（総合商社・専門商社）</option>
+            <option value="金融（銀行・証券・保険・ファンド）">金融（銀行・証券・保険・ファンド）</option>
+            <option value="コンサルティング（戦略・IT・総合）">コンサルティング（戦略・IT・総合）</option>
+            <option value="IT・テック（ソフトウェア・SaaS・AI）">IT・テック（ソフトウェア・SaaS・AI）</option>
+            <option value="広告・メディア（広告代理店・出版・放送）">広告・メディア（広告代理店・出版・放送）</option>
+            <option value="不動産・建設">不動産・建設</option>
+            <option value="医療・製薬・ヘルスケア">医療・製薬・ヘルスケア</option>
+            <option value="物流・インフラ・エネルギー">物流・インフラ・エネルギー</option>
+            <option value="官公庁・公務員・非営利">官公庁・公務員・非営利</option>
+            <option value="スタートアップ・ベンチャー">スタートアップ・ベンチャー</option>
+            <option value="その他">その他</option>
+          </select>
         </div>
       </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
-
-      <div class="question-item" id="current-question">
-        <p class="q-number" id="q-number">Question 01</p>
-        <p class="q-text" id="q-text"></p>
-        <div class="choices-grid" id="choices-grid"></div>
-        <div class="q-nav">
-          <button class="btn-secondary" id="btn-back">← 前へ</button>
-          <button class="btn-next" id="btn-next">次へ →</button>
-          <button class="btn-finish hidden" id="btn-finish">軸を見る</button>
-        </div>
-      </div>
-
-      <div class="loading-overlay" id="loading-summary">
-        <div class="loader"></div>
-        <p class="loading-text">あなたの軸を分析しています...</p>
-      </div>
-      <div class="error-msg" id="error-questions">エラーが発生しました。もう一度お試しください。</div>
+      <button class="btn-primary" id="start-btn" onclick="startDiagnosis()">裏まで確認する →</button>
+      <div class="error-msg" id="error-top"></div>
     </div>
   </div>
+</div>
 
-  <!-- ③ SUMMARY -->
-  <div id="section-summary">
-    <div class="card">
-      <div class="summary-header">
-        <p class="summary-eyebrow">Your Career Compass</p>
-        <h2 class="summary-title" id="summary-title">あなたの軸</h2>
-        <div class="summary-divider"></div>
+<!-- STEP 2: QUIZ -->
+<div id="step2" class="screen">
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <div class="quiz-brand">URA-KAKU</div>
+      <div class="quiz-step-info" id="step-info">Q1 / 5</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:20%"></div>
+    </div>
+    <div class="context-chip" id="context-chip">
+      <span>📍</span><span id="context-text">企業名 × 業界</span>
+    </div>
+    <div class="question-number" id="q-number">QUESTION 01</div>
+    <div class="question-text" id="q-text">質問を読み込んでいます...</div>
+    <div class="choices" id="choices-container"></div>
+    <div class="quiz-nav">
+      <button class="btn-nav" id="prev-btn" onclick="prevQuestion()" style="display:none">← 前へ</button>
+      <button class="btn-nav btn-nav-primary" id="next-btn" onclick="nextQuestion()" disabled>次へ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3: RESULTS -->
+<div id="step3" class="screen">
+  <div class="results-container">
+    <div class="results-header">
+      <div class="results-brand">URA-KAKU 診断結果</div>
+      <div class="company-target" id="result-company-badge"></div>
+      <h2 class="results-title" id="result-title">マッチ度診断</h2>
+    </div>
+
+    <!-- Match Score -->
+    <div class="match-score-card">
+      <div class="match-label">総合マッチ度</div>
+      <div class="match-number" id="match-number">—<span>%</span></div>
+      <div class="match-verdict" id="match-verdict">結果を計算中...</div>
+    </div>
+
+    <!-- Radar Chart -->
+    <div class="chart-card">
+      <div class="section-title">5軸マッチ度レーダー</div>
+      <div class="chart-wrapper">
+        <canvas id="radarChart"></canvas>
       </div>
-
       <div class="axis-list" id="axis-list"></div>
-
-      <div class="summary-message">
-        <p id="summary-message-text"></p>
-      </div>
-
-      <button class="btn-restart" id="btn-restart">はじめからやり直す</button>
     </div>
+
+    <!-- OB Comment -->
+    <div class="ob-card" id="ob-card">
+      <div class="ob-quote-mark">"</div>
+      <div class="section-title" style="margin-bottom:12px">OBからの本音</div>
+      <div class="ob-text" id="ob-text">読み込み中...</div>
+      <div class="ob-attribution">— 現役OB・OG（匿名）</div>
+    </div>
+
+    <!-- Axes -->
+    <div class="chart-card" style="margin-bottom:24px">
+      <div class="section-title">あなたの軸 3選</div>
+      <div class="axes-grid" id="axes-grid"></div>
+    </div>
+
+    <button class="btn-retry" onclick="restart()">もう一度診断する</button>
   </div>
-
-</main>
-
-<footer>
-  <p>© 2025 Compass — 企業を選ぶ前に、自分を知る</p>
-</footer>
+</div>
 
 <script>
-  const state = {
-    company: '',
-    industry: '',
-    questions: [],   // [{text, choices:[]}]
-    answers: [],     // selected choice text
-    currentIndex: 0,
-  };
+  const AXIS_NAMES = ['価値観一致度', '成長環境適合度', '働き方適合度', '動機の純度', 'ストレス耐性'];
+  const AXIS_ICONS = ['🎯', '🌱', '⏰', '💡', '🛡️'];
+  const CHOICES = ['とても当てはまる', '少し当てはまる', 'あまり当てはまらない', '全く当てはまらない'];
 
-  // Elements
-  const secInput = document.getElementById('section-input');
-  const secQuestions = document.getElementById('section-questions');
-  const secSummary = document.getElementById('section-summary');
-  const btnGenerate = document.getElementById('btn-generate');
-  const btnBack = document.getElementById('btn-back');
-  const btnNext = document.getElementById('btn-next');
-  const btnFinish = document.getElementById('btn-finish');
-  const btnRestart = document.getElementById('btn-restart');
-  const loadingQ = document.getElementById('loading-questions');
-  const loadingS = document.getElementById('loading-summary');
-  const errorInput = document.getElementById('error-input');
-  const errorQuestions = document.getElementById('error-questions');
-  const progressBar = document.getElementById('progress-bar');
-  const progressLabel = document.getElementById('qs-progress-label');
-  const companyLabel = document.getElementById('qs-company-label');
-  const qNumber = document.getElementById('q-number');
-  const qText = document.getElementById('q-text');
-  const choicesGrid = document.getElementById('choices-grid');
-  const currentQuestion = document.getElementById('current-question');
-  const axisList = document.getElementById('axis-list');
-  const summaryTitle = document.getElementById('summary-title');
-  const summaryMsg = document.getElementById('summary-message-text');
+  let currentQ = 0;
+  let questions = [];
+  let answers = [];
+  let companyName = '';
+  let industry = '';
+  let radarChart = null;
 
-  function showError(el, msg) {
-    el.textContent = msg || 'エラーが発生しました。';
-    el.classList.add('active');
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.remove('active');
+      s.style.display = 'none';
+    });
+    const el = document.getElementById(id);
+    el.style.display = 'flex';
+    requestAnimationFrame(() => el.classList.add('active'));
   }
 
-  function hideError(el) {
-    el.classList.remove('active');
+  function setLoading(active, msg = '') {
+    const ov = document.getElementById('loading-overlay');
+    if (active) {
+      ov.classList.add('active');
+      if (msg) document.getElementById('loading-msg').innerHTML = msg;
+    } else {
+      ov.classList.remove('active');
+    }
   }
 
-  function renderChoices(index) {
-    const q = state.questions[index];
-    choicesGrid.innerHTML = '';
-    q.choices.forEach((choice, ci) => {
+  async function callAPI(body) {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `APIエラー (${res.status})`);
+    }
+    return res.json();
+  }
+
+  async function startDiagnosis() {
+    companyName = document.getElementById('company-input').value.trim();
+    industry = document.getElementById('industry-select').value;
+    const errEl = document.getElementById('error-top');
+    errEl.style.display = 'none';
+
+    if (!companyName) { errEl.textContent = '企業名を入力してください。'; errEl.style.display = 'block'; return; }
+    if (!industry) { errEl.textContent = '業界を選択してください。'; errEl.style.display = 'block'; return; }
+
+    setLoading(true, 'OBのリアルな声をもとに<br>質問を生成しています...');
+
+    try {
+      const data = await callAPI({ type: 'generate_questions', company: companyName, industry });
+      questions = data.questions;
+      answers = new Array(5).fill(null);
+
+      document.getElementById('context-text').textContent = `${companyName} × ${industry}`;
+      currentQ = 0;
+      renderQuestion();
+      showScreen('step2');
+    } catch (e) {
+      errEl.textContent = e.message || '通信エラーが発生しました。しばらくしてからお試しください。';
+      errEl.style.display = 'block';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('q-number').textContent = `QUESTION ${String(currentQ + 1).padStart(2, '0')}`;
+    document.getElementById('q-text').textContent = q;
+    document.getElementById('step-info').textContent = `Q${currentQ + 1} / 5`;
+    document.getElementById('progress-fill').style.width = `${(currentQ + 1) / 5 * 100}%`;
+
+    const container = document.getElementById('choices-container');
+    container.innerHTML = '';
+    CHOICES.forEach((c, i) => {
       const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      if (state.answers[index] === choice) btn.classList.add('selected');
-      btn.textContent = choice;
-      btn.addEventListener('click', () => {
-        state.answers[index] = choice;
-        document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        // Auto-advance after short delay
-        setTimeout(() => {
-          if (index < state.questions.length - 1) {
-            state.currentIndex++;
-            updateQuestion(state.currentIndex);
-          } else {
-            // last question — highlight finish button
-            btnFinish.style.animation = 'pulse 0.4s ease';
+      btn.className = 'choice-btn' + (answers[currentQ] === i ? ' selected' : '');
+      btn.innerHTML = `<div class="choice-mark"></div><span>${c}</span>`;
+      btn.onclick = () => selectChoice(i);
+      container.appendChild(btn);
+    });
+
+    document.getElementById('prev-btn').style.display = currentQ > 0 ? 'block' : 'none';
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.disabled = answers[currentQ] === null;
+    nextBtn.textContent = currentQ === 4 ? '結果を見る →' : '次へ →';
+  }
+
+  function selectChoice(i) {
+    answers[currentQ] = i;
+    document.querySelectorAll('.choice-btn').forEach((btn, idx) => {
+      btn.classList.toggle('selected', idx === i);
+    });
+    document.getElementById('next-btn').disabled = false;
+  }
+
+  function prevQuestion() {
+    if (currentQ > 0) { currentQ--; renderQuestion(); }
+  }
+
+  async function nextQuestion() {
+    if (answers[currentQ] === null) return;
+    if (currentQ < 4) {
+      currentQ++;
+      renderQuestion();
+    } else {
+      await computeResults();
+    }
+  }
+
+  async function computeResults() {
+    setLoading(true, '回答を分析しています...<br>OBの本音コメントを準備中です。');
+
+    const qaList = questions.map((q, i) => ({
+      question: q,
+      answer: CHOICES[answers[i]],
+      score: [4, 3, 2, 1][answers[i]]
+    }));
+
+    try {
+      const data = await callAPI({ type: 'generate_results', company: companyName, industry, qa: qaList });
+      renderResults(data);
+      showScreen('step3');
+    } catch (e) {
+      alert('結果の生成中にエラーが発生しました: ' + e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function renderResults(data) {
+    // Match score
+    document.getElementById('result-company-badge').textContent = `${companyName} × ${industry}`;
+    document.getElementById('match-number').innerHTML = `${data.totalScore}<span>%</span>`;
+    document.getElementById('match-verdict').textContent = data.verdict;
+
+    // Axis bars
+    const axisListEl = document.getElementById('axis-list');
+    axisListEl.innerHTML = '';
+    AXIS_NAMES.forEach((name, i) => {
+      const val = data.scores[i];
+      axisListEl.innerHTML += `
+        <div class="axis-item">
+          <div class="axis-row">
+            <span class="axis-name">${name}</span>
+            <span class="axis-val">${val}%</span>
+          </div>
+          <div class="axis-bar-track">
+            <div class="axis-bar-fill" style="width:${val}%"></div>
+          </div>
+        </div>`;
+    });
+
+    // Radar
+    if (radarChart) radarChart.destroy();
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    radarChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: AXIS_NAMES,
+        datasets: [{
+          data: data.scores,
+          backgroundColor: 'rgba(201,168,76,0.15)',
+          borderColor: '#C9A84C',
+          borderWidth: 2,
+          pointBackgroundColor: '#C9A84C',
+          pointRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            min: 0, max: 100,
+            ticks: { display: false },
+            grid: { color: 'rgba(255,255,255,0.08)' },
+            angleLines: { color: 'rgba(255,255,255,0.08)' },
+            pointLabels: {
+              color: '#A0AEC0',
+              font: { family: "'Noto Sans JP'", size: 10 }
+            }
           }
-        }, 400);
-      });
-      choicesGrid.appendChild(btn);
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // OB comment
+    document.getElementById('ob-text').textContent = data.obComment;
+
+    // Axes
+    const axesGrid = document.getElementById('axes-grid');
+    axesGrid.innerHTML = '';
+    data.userAxes.forEach((ax, i) => {
+      axesGrid.innerHTML += `
+        <div class="axis-card">
+          <div class="axis-icon">${['①','②','③'][i]}</div>
+          <div>
+            <div class="axis-card-title">${ax.label}</div>
+            <div class="axis-card-desc">${ax.description}</div>
+          </div>
+        </div>`;
     });
   }
 
-  function updateQuestion(index) {
-    currentQuestion.classList.remove('visible');
-    setTimeout(() => {
-      qNumber.textContent = `Question ${String(index + 1).padStart(2, '0')}`;
-      qText.textContent = state.questions[index].text;
-      progressBar.style.width = `${((index + 1) / state.questions.length) * 100}%`;
-      progressLabel.textContent = `問 ${index + 1} / ${state.questions.length}`;
-
-      renderChoices(index);
-
-      btnBack.style.visibility = index === 0 ? 'hidden' : 'visible';
-      btnNext.classList.toggle('hidden', index === state.questions.length - 1);
-      btnFinish.classList.toggle('hidden', index !== state.questions.length - 1);
-
-      setTimeout(() => currentQuestion.classList.add('visible'), 20);
-    }, 200);
+  function restart() {
+    document.getElementById('company-input').value = '';
+    document.getElementById('industry-select').value = '';
+    document.getElementById('error-top').style.display = 'none';
+    showScreen('step1');
   }
-
-  // Generate questions
-  btnGenerate.addEventListener('click', async () => {
-    const company = document.getElementById('company').value.trim();
-    const industryEl = document.getElementById('industry');
-    const industry = industryEl.value;
-
-    if (!company || !industry) {
-      showError(errorInput, '企業名と業界の両方を入力・選択してください。');
-      return;
-    }
-
-    hideError(errorInput);
-    btnGenerate.disabled = true;
-    loadingQ.classList.add('active');
-
-    state.company = company;
-    state.industry = industry;
-
-    try {
-      const questionPrompt = `あなたは就活生の自己分析を深めるプロのキャリアコーチです。
-企業「${company}」（業界：${industry}）を志望する就活生に向けて、自己分析のための質問を5問生成してください。
-
-【必須ルール】
-・質問は必ず1つの問いに絞ること（「〜ですか？それとも〜ですか？」のような二重の問いは禁止）
-・「〜に当てはまりますか？」という形式、または「〜だと感じる」「〜を望んでいる」など、4段階で答えられる1文の断言形式にする
-・選択肢は固定で「とても当てはまる」「少し当てはまる」「あまり当てはまらない」「全く当てはまらない」の4択のみ使用
-・就活生が思わず立ち止まるような、本質的で深い問いにする
-・表面的なスキルや経験ではなく、価値観・動機・人生観・働き方の本音に触れる内容にする
-
-【良い質問の例】
-・「仕事を通じて、自分の名前よりも自分が関わったものが世に残ることに喜びを感じる」
-・「10年後、今の自分が想像できない場所にいることを望んでいる」
-・「チームの成功より、自分個人の成長を優先したいと思うことがある」
-
-JSONで返してください。形式：{"questions": [{"text": "質問文", "choices": ["とても当てはまる", "少し当てはまる", "あまり当てはまらない", "全く当てはまらない"]}, ...]}`;
-
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'questions', company, industry, prompt: questionPrompt }),
-      });
-
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-
-      // Support both old format (string[]) and new format ({text, choices}[])
-      let questions = data.questions;
-      if (!questions || questions.length < 3) throw new Error('Invalid questions');
-
-      // Normalize to {text, choices} format
-      state.questions = questions.map(q => {
-        if (typeof q === 'string') {
-          return { text: q, choices: ['とても当てはまる', '少し当てはまる', 'あまり当てはまらない', '全く当てはまらない'] };
-        }
-        return q;
-      });
-
-      state.answers = new Array(state.questions.length).fill('');
-      state.currentIndex = 0;
-
-      secInput.style.display = 'none';
-      secQuestions.style.display = 'block';
-      companyLabel.textContent = company + '｜' + industry;
-      updateQuestion(0);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    } catch (e) {
-      showError(errorInput, 'APIエラーが発生しました。時間をおいて再度お試しください。');
-    } finally {
-      loadingQ.classList.remove('active');
-      btnGenerate.disabled = false;
-    }
-  });
-
-  btnBack.addEventListener('click', () => {
-    if (state.currentIndex > 0) {
-      state.currentIndex--;
-      updateQuestion(state.currentIndex);
-    }
-  });
-
-  btnNext.addEventListener('click', () => {
-    if (!state.answers[state.currentIndex]) {
-      showError(errorQuestions, '選択肢を選んでから次へ進んでください。');
-      return;
-    }
-    hideError(errorQuestions);
-    if (state.currentIndex < state.questions.length - 1) {
-      state.currentIndex++;
-      updateQuestion(state.currentIndex);
-    }
-  });
-
-  btnFinish.addEventListener('click', async () => {
-    if (!state.answers[state.currentIndex]) {
-      showError(errorQuestions, '選択肢を選んでから結果を見てください。');
-      return;
-    }
-    hideError(errorQuestions);
-
-    // Build answers text from choices
-    const answersText = state.questions.map((q, i) =>
-      `Q${i + 1}: ${q.text}\nA: ${state.answers[i] || '（未回答）'}`
-    ).join('\n\n');
-
-    currentQuestion.style.display = 'none';
-    loadingS.classList.add('active');
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'summary', answers: answersText }),
-      });
-
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-
-      // Show summary
-      secQuestions.style.display = 'none';
-      secSummary.style.display = 'block';
-
-      summaryTitle.textContent = data.title || 'あなたの軸';
-      summaryMsg.textContent = data.message || '';
-
-      axisList.innerHTML = '';
-      (data.points || []).forEach((point, i) => {
-        const item = document.createElement('div');
-        item.className = 'axis-item';
-        item.innerHTML = `
-          <div class="axis-num">${String(i + 1).padStart(2, '0')}</div>
-          <div class="axis-content">
-            <p class="axis-label">${point.label}</p>
-            <p class="axis-desc">${point.description}</p>
-          </div>`;
-        axisList.appendChild(item);
-        setTimeout(() => item.classList.add('visible'), 200 + i * 180);
-      });
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    } catch (e) {
-      loadingS.classList.remove('active');
-      currentQuestion.style.display = 'block';
-      showError(errorQuestions, 'サマリーの生成に失敗しました。もう一度お試しください。');
-    }
-  });
-
-  btnRestart.addEventListener('click', () => {
-    state.company = '';
-    state.industry = '';
-    state.questions = [];
-    state.answers = [];
-    state.currentIndex = 0;
-
-    document.getElementById('company').value = '';
-    document.getElementById('industry').value = '';
-    secSummary.style.display = 'none';
-    secQuestions.style.display = 'none';
-    currentQuestion.style.display = 'block';
-    secInput.style.display = 'block';
-    axisList.innerHTML = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
 </script>
 </body>
 </html>
